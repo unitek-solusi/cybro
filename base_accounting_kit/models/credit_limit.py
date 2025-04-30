@@ -86,15 +86,16 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """To check the selected customers due amount is exceed than
         blocking stage"""
-        if self.partner_id.active_limit \
-                and self.partner_id.enable_credit_limit:
-            if self.due_amount >= self.partner_id.blocking_stage:
-                if self.partner_id.blocking_stage != 0:
-                    raise UserError(_(
-                        "%s is in  Blocking Stage and "
-                        "has a due amount of %s %s to pay") % (
-                                        self.partner_id.name, self.due_amount,
-                                        self.currency_id.symbol))
+        if not self.env.context.get('skip_credit_check', False):
+            if self.partner_id.active_limit \
+                    and self.partner_id.enable_credit_limit:
+                if self.due_amount >= self.partner_id.blocking_stage:
+                    if self.partner_id.blocking_stage != 0:
+                        raise UserError(_(
+                            "%s is in  Blocking Stage and "
+                            "has a due amount of %s %s to pay") % (
+                                            self.partner_id.name, self.due_amount,
+                                            self.currency_id.symbol))
         return super(SaleOrder, self)._action_confirm()
 
     @api.onchange('partner_id')
