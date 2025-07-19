@@ -65,7 +65,9 @@ class StockMove(models.Model):
                 new_picking = True
                 pick_values = moves._get_new_picking_values()
                 sale_order = self.env['sale.order'].search([
-                    ('name', '=', pick_values['origin'])])
+                    ('name', '=', pick_values['origin']),
+                    ('company_id', '=', self.env.company.id)
+                ])
                 if sale_order.delivery_split and not sale_order.is_consolidate:
                     for move in moves:
                         picking = picking.create(
@@ -90,4 +92,4 @@ class StockMove(models.Model):
                                  'partner_id': sale_order.partner_id.id})
                     moves._assign_picking_post_process(new=new_picking)
         return True
-    StockMove._assign_picking = _assign_picking
+    #StockMove._assign_picking = _assign_picking
