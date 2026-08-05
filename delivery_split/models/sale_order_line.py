@@ -73,4 +73,4 @@ class SaleOrderLine(models.Model):
         if self.order_id.delivery_split:
             values.update({"partner_id": self.recipient_id.id})
         return values
-    SaleOrderLine._prepare_procurement_values = _prepare_procurement_values
+    #SaleOrderLine._prepare_procurement_values = _prepare_procurement_values
